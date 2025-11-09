@@ -24,10 +24,8 @@ export default function BinPage() {
 
   const handleRestore = async (id: string) => {
     try {
-      // Restore note from bin in Supabase
       await restoreNote(id)
       
-      // Update local state
       const newBin = bin.filter(n => n.id !== id)
       setBin(newBin)
     } catch (error) {
@@ -37,10 +35,8 @@ export default function BinPage() {
 
   const handleDeletePermanently = async (id: string) => {
     try {
-      // Delete note permanently from Supabase
       await deleteNotePermanently(id)
       
-      // Update local state
       const newBin = bin.filter(n => n.id !== id)
       setBin(newBin)
     } catch (error) {
@@ -56,7 +52,8 @@ export default function BinPage() {
         backgroundColor: 'white',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        color: 'black'
       }}>
         <p>Loading bin...</p>
       </div>
@@ -69,7 +66,6 @@ export default function BinPage() {
       minHeight: '100vh',
       backgroundColor: 'white'
     }}>
-      {/* Header with pale green rounded square */}
       <div style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -87,7 +83,8 @@ export default function BinPage() {
           padding: '20px',
           backgroundColor: 'rgba(0, 0, 0, 0.05)',
           borderRadius: '8px',
-          textAlign: 'center'
+          textAlign: 'center',
+          color: 'black'
         }}>Bin is empty.</p>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
@@ -112,7 +109,6 @@ export default function BinPage() {
               </div>
               
               <div>
-                {/* Created at time */}
                 <div style={{
                   padding: '6px 12px',
                   backgroundColor: '#e8f5e8',
@@ -124,7 +120,7 @@ export default function BinPage() {
                   </small>
                 </div>
 
-                {/* Deleted at time - You might want to add a deleted_at field to your database */}
+
                 <div style={{
                   padding: '6px 12px',
                   backgroundColor: 'rgba(232, 245, 232, 0.6)',
@@ -136,7 +132,6 @@ export default function BinPage() {
                   </small>
                 </div>
                 
-                {/* Action buttons */}
                 <div style={{ display: 'flex', gap: 10 }}>
                   <button 
                     onClick={() => handleRestore(note.id)}

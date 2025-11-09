@@ -89,7 +89,8 @@ export default function MyNotesPage() {
         backgroundColor: 'white',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        color: 'black'
       }}>
         <p>Loading notes...</p>
       </div>
@@ -119,7 +120,8 @@ export default function MyNotesPage() {
           padding: '20px',
           backgroundColor: 'rgba(0, 0, 0, 0.05)',
           borderRadius: '8px',
-          textAlign: 'center'
+          textAlign: 'center',
+          color: 'black'
         }}>No notes yet.</p>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
