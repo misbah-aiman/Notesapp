@@ -55,7 +55,7 @@ export default function NewNotePage() {
           justifyContent: 'center',
           fontSize: '20px',
           fontWeight: 'bold',
-          color: '#2d5016'
+          color: 'black'
         }}>
           +
         </div>
