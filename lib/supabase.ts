@@ -5,8 +5,8 @@ export async function getNotes(): Promise<Note[]> {
   const { data, error } = await supabase
     .from('notes')
     .select('*')
-    .eq('in_bin', false) // Only get notes not in bin
-    .order('created_at', { ascending: false })
+    .eq('in_bin', false)
+    .order('createdAt', { ascending: false }) 
   
   if (error) {
     console.error('Error fetching notes:', error)
@@ -20,8 +20,8 @@ export async function getBin(): Promise<Note[]> {
   const { data, error } = await supabase
     .from('notes')
     .select('*')
-    .eq('in_bin', true) // Only get notes in bin
-    .order('created_at', { ascending: false })
+    .eq('in_bin', true)
+    .order('createdAt', { ascending: false })
   
   if (error) {
     console.error('Error fetching bin notes:', error)
@@ -63,7 +63,6 @@ export async function saveBin(binNotes: Note[]) {
   }
 }
 
-// Restore note from bin
 export async function restoreNote(id: string) {
   const { error } = await supabase
     .from('notes')
@@ -76,7 +75,6 @@ export async function restoreNote(id: string) {
   }
 }
 
-// Delete note permanently
 export async function deleteNotePermanently(id: string) {
   const { error } = await supabase
     .from('notes')
@@ -89,8 +87,6 @@ export async function deleteNotePermanently(id: string) {
   }
 }
 
-
-// Clear bin (delete all notes in bin)
 export async function clearBin() {
   const { error } = await supabase
     .from('notes')

@@ -23,7 +23,7 @@ export default function NewNotePage() {
         in_bin: false
       }
       
-      await saveNotes([newNote])
+      await saveNotes(newNote)
       router.push('/mynotes')
     } catch (error) {
       console.error('Error saving note:', error)

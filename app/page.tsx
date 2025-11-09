@@ -6,19 +6,17 @@ export default function HomePage() {
   const router = useRouter()
 
   return (
-    <div style={styles.container}>
-      {/* Title with rounded square shape and pale green background */}
-      <div style={styles.titleContainer}>
-        <h1 style={styles.title}>Notes App</h1>
-      </div>
+        <div style={styles.container}>
+          <div style={styles.titleContainer}>
+            <h1 style={styles.title}>Notes App</h1>
+          </div>
       
-      {/* Sidebar with 3 options */}
-      <div style={styles.sidebar}>
-        <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
-        <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
-        <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
-      </div>
-    </div>
+          <div style={styles.sidebar}>
+            <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
+            <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
+            <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
+          </div>
+        </div>
   )
 }
 
