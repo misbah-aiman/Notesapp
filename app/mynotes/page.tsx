@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Note } from '@/lib/types'
-import { getNotes, saveNotes, moveToBin, updateNote } from '@/lib/supabase'
+import { getNotes, saveNotes, getBin, saveBin } from '@/lib/storage'
 
 export default function MyNotesPage() {
   const [notes, setNotes] = useState<Note[]>([])
@@ -12,17 +12,17 @@ export default function MyNotesPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const fetchNotes = () => { // REMOVED async
       try {
         setLoading(true)
         setError(null)
-        console.log('Fetching notes from Supabase...')
-        const notesData = await getNotes()
+        console.log('Fetching notes from localStorage...') // UPDATED
+        const notesData = getNotes() // REMOVED await
         console.log('Received notes:', notesData)
         setNotes(notesData)
         
         if (notesData.length === 0) {
-          console.log('No notes found - database might be empty')
+          console.log('No notes found - localStorage might be empty')
         }
       } catch (error) {
         console.error('Error fetching notes:', error)
@@ -34,11 +34,18 @@ export default function MyNotesPage() {
     fetchNotes()
   }, [])
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => { // REMOVED async
     try {
-      await moveToBin(id)
-      
+      const noteToDelete = notes.find(n => n.id === id)
+      if (!noteToDelete) return
+
+      // Move note to Bin
+      const bin = getBin()
+      saveBin([noteToDelete, ...bin])
+
+      // Remove from My Notes
       const newNotes = notes.filter(n => n.id !== id)
+      saveNotes(newNotes)
       setNotes(newNotes)
     } catch (error) {
       console.error('Error deleting note:', error)
@@ -51,7 +58,7 @@ export default function MyNotesPage() {
     setEditContent(note.content)
   }
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = () => { // REMOVED async
     if (!editingNote) return
 
     try {
@@ -61,10 +68,11 @@ export default function MyNotesPage() {
         content: editContent
       }
       
-      await updateNote(updatedNote)
+      // Update in localStorage
       const updatedNotes = notes.map(note =>
         note.id === editingNote.id ? updatedNote : note
       )
+      saveNotes(updatedNotes) // SAVE TO LOCALSTORAGE
       
       setNotes(updatedNotes)
       setEditingNote(null)
@@ -148,7 +156,7 @@ export default function MyNotesPage() {
                       borderRadius: '8px',
                       backgroundColor: 'white',
                       outline: 'none',
-                      color: 'black' // ADDED
+                      color: 'black'
                     }}
                   />
                   <textarea
@@ -164,7 +172,7 @@ export default function MyNotesPage() {
                       outline: 'none',
                       resize: 'vertical',
                       fontFamily: 'inherit',
-                      color: 'black' // ADDED
+                      color: 'black'
                     }}
                   />
                   <div style={{ display: 'flex', gap: 10 }}>
