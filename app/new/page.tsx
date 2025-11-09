@@ -79,7 +79,7 @@ export default function NewNotePage() {
             fontSize: '16px',
             border: 'none',
             borderRadius: '8px',
-            backgroundColor: 'rgba(0, 0, 0, 0.05)',
+            backgroundColor: 'black',
             outline: 'none',
             transition: 'background-color 0.2s ease',
             opacity: loading ? 0.7 : 1
@@ -105,7 +105,7 @@ export default function NewNotePage() {
             fontSize: '16px',
             border: 'none',
             borderRadius: '8px',
-            backgroundColor: 'rgba(0, 0, 0, 0.05)',
+            backgroundColor: 'black',
             outline: 'none',
             resize: 'vertical',
             minHeight: '200px',
