@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Note } from '@/lib/types'
-import { getNotes, saveNotes, moveToBin, updateNote } from '@/lib/supabase' // FIXED IMPORTS
+import { getNotes, saveNotes, moveToBin, updateNote } from '@/lib/supabase'
 
 export default function MyNotesPage() {
   const [notes, setNotes] = useState<Note[]>([])
