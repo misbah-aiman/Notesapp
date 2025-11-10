@@ -10,8 +10,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const notesCollection = db.collection<Note>('notes');
 
   try {
-  // Note: `Note._id` in our types is a string, but MongoDB uses ObjectId.
-  // Cast to `any` here to avoid a type mismatch while still querying by ObjectId.
   const filter: any = { _id: new ObjectId(id as string) };
     const update = {
       $set: {
