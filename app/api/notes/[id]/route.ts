@@ -13,7 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (req.method) {
       case 'PUT':
         const updateData: UpdateNoteData = req.body;
-        // Build filter and update separately to avoid syntax errors
         const filter: any = { _id: new ObjectId(id as string) };
         const update = {
           $set: {
