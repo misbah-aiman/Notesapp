@@ -1,4 +1,4 @@
-import { Note, CreateNoteData, UpdateNoteData } from 'app/lib/types';
+import { Note, CreateNoteData, UpdateNoteData } from '@/lib/types';
 
 const API_BASE = '/api/notes';
 
