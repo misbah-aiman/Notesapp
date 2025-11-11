@@ -1,41 +1,47 @@
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+// ✅ BETTER ERROR MESSAGE
+if (!process.env.MONGODB_URI) {
+  throw new Error(`
+    ❌ MONGODB_URI is missing!
+    Please add it to Vercel Environment Variables:
+    1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
+    2. Add: MONGODB_URI = your-mongodb-atlas-connection-string
+  `);
 }
 
-// ✅ PRODUCTION-OPTIMIZED OPTIONS
+// ✅ VALIDATE CONNECTION STRING FORMAT
+if (!process.env.MONGODB_URI.includes('mongodb+srv://')) {
+  throw new Error(`
+    ❌ Invalid MONGODB_URI format!
+    Your URI: ${process.env.MONGODB_URI}
+    It should start with: mongodb+srv://
+    Get the correct string from MongoDB Atlas → Connect → Connect your application
+  `);
+}
+
+const uri = process.env.MONGODB_URI;
 const options: MongoClientOptions = {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  ssl: true,
-  tls: true,
-  tlsAllowInvalidCertificates: false,
-  retryWrites: true,
-  retryReads: true,
+  socketTimeoutMS: 30000,
 };
 
-// Global variables for connection caching
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
 if (process.env.NODE_ENV === 'development') {
-  // Development: use global variable
   let globalWithMongo = global as typeof globalThis & {
     _mongoClientPromise?: Promise<MongoClient>;
   };
 
   if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(MONGODB_URI, options);
+    client = new MongoClient(uri, options);
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
 } else {
-  // Production: don't use global variable (Vercel serverless)
-  client = new MongoClient(MONGODB_URI, options);
+  client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }
 
