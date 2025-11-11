@@ -1,42 +1,41 @@
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
-const uri = process.env.MONGODB_URI;
-
-// ✅ PRODUCTION-READY OPTIONS
+// ✅ PRODUCTION-OPTIMIZED OPTIONS
 const options: MongoClientOptions = {
   maxPoolSize: 10,
-  minPoolSize: 5,
-  maxIdleTimeMS: 30000,
+  serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  connectTimeoutMS: 30000,
   ssl: true,
   tls: true,
   tlsAllowInvalidCertificates: false,
   retryWrites: true,
-  w: 'majority'
+  retryReads: true,
 };
 
+// Global variables for connection caching
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
 if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable
+  // Development: use global variable
   let globalWithMongo = global as typeof globalThis & {
     _mongoClientPromise?: Promise<MongoClient>;
   };
 
   if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options);
+    client = new MongoClient(MONGODB_URI, options);
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
 } else {
-  // In production mode, it's best to not use a global variable
-  client = new MongoClient(uri, options);
+  // Production: don't use global variable (Vercel serverless)
+  client = new MongoClient(MONGODB_URI, options);
   clientPromise = client.connect();
 }
 
