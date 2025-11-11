@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react'
 
 interface Note {
   _id: string
+  id: string
   title: string
   content: string
   createdAt: string
-  updatedAt?: string
+  updatedAt: string
   in_bin?: boolean
+  favorite?: boolean
 }
 
 export default function MyNotesPage() {
@@ -24,27 +26,46 @@ export default function MyNotesPage() {
   const fetchNotes = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/notes/route')
-      if (!res.ok) throw new Error('Failed to fetch notes')
-      const data = await res.json()
-      setNotes(data)
+      const res = await fetch('/api/notes')
+      const result = await res.json()
+      
+      if (!res.ok) {
+        throw new Error(result.error || 'Failed to fetch notes')
+      }
+      
+      setNotes(result.data)
     } catch (error) {
-      console.error(error)
+      console.error('Fetch error:', error)
+      alert('Failed to load notes')
     } finally {
       setLoading(false)
     }
   }
 
   const handleDelete = async (id: string) => {
-    try {
-      const res = await fetch(`/api/notes/${id}/bin`, { method: 'PATCH' })
-      if (!res.ok) throw new Error('Failed to move note to bin')
-      setNotes(prev => prev.filter(note => note._id !== id))
-    } catch (error) {
-      console.error(error)
-      alert('Failed to delete note')
+  if (!confirm('Are you sure you want to delete this note?')) return
+  
+  console.log('🔍 FRONTEND DELETE - Deleting note ID:', id);
+  
+  try {
+    const res = await fetch(`/api/notes/${id}`, { 
+      method: 'DELETE'
+    })
+    
+    const result = await res.json()
+    console.log('DELETE Response:', result)
+    
+    if (!res.ok) {
+      throw new Error(result.error || 'Failed to delete note')
     }
+    
+    setNotes(prev => prev.filter(note => note._id !== id))
+    alert('Note deleted successfully')
+  } catch (error: any) {
+    console.error('Delete error:', error)
+    alert(error.message || 'Failed to delete note')
   }
+}
 
   const handleEdit = (note: Note) => {
     setEditingNote(note)
@@ -53,46 +74,196 @@ export default function MyNotesPage() {
   }
 
   const handleSaveEdit = async () => {
-    if (!editingNote) return
-    try {
-      const res = await fetch(`/api/notes/${editingNote._id}/route`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: editTitle, content: editContent }),
-      })
-      if (!res.ok) throw new Error('Failed to update note')
-      fetchNotes()
-      setEditingNote(null)
-      setEditTitle('')
-      setEditContent('')
-    } catch (error) {
-      console.error(error)
-      alert('Failed to update note')
+  if (!editingNote) return
+  
+  console.log('🔍 FRONTEND DEBUG ================')
+  console.log('Note ID:', editingNote._id)
+  
+  try {
+    // ✅ Create the request body properly
+    const requestBody = {
+      title: editTitle.trim(),
+      content: editContent.trim()
     }
+    
+    console.log('Request Body:', requestBody)
+    console.log('Stringified Body:', JSON.stringify(requestBody))
+    
+    const res = await fetch(`/api/notes/${editingNote._id}`, {
+      method: 'PUT', 
+      headers: { 
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+    
+    const result = await res.json()
+    console.log('Response Status:', res.status)
+    console.log('Response Data:', result)
+    
+    if (!res.ok) {
+      throw new Error(result.error || `HTTP ${res.status}: Failed to update note`)
+    }
+    
+    console.log('✅ Edit successful!')
+    fetchNotes()
+    setEditingNote(null)
+    alert('Note updated successfully')
+    
+  } catch (error: any) {
+    console.error('❌ Edit failed:', error)
+    alert(`Error: ${error.message}`)
+  }
+}
+
+  const cancelEdit = () => {
+    setEditingNote(null)
+    setEditTitle('')
+    setEditContent('')
   }
 
-  if (loading) return <p>Loading notes...</p>
+  if (loading) return (
+    <div style={{ padding: '50px', textAlign: 'center' }}>
+      <p>Loading notes...</p>
+    </div>
+  )
 
   return (
-    <div>
-      {notes.map(note => (
-        <div key={note._id}>
-          {editingNote?._id === note._id ? (
-            <>
-              <input value={editTitle} onChange={e => setEditTitle(e.target.value)} />
-              <textarea value={editContent} onChange={e => setEditContent(e.target.value)} />
-              <button onClick={handleSaveEdit}>Save</button>
-            </>
-          ) : (
-            <>
-              <h3>{note.title}</h3>
-              <p>{note.content}</p>
-              <button onClick={() => handleEdit(note)}>Edit</button>
-              <button onClick={() => handleDelete(note._id)}>Delete</button>
-            </>
-          )}
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+        <h1 style={{ color: 'black', margin: 0 }}>My Notes</h1>
+        <span style={{ color: '#666' }}>{notes.length} notes</span>
+      </div>
+
+      {notes.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>
+          <p>No notes yet. Create your first note!</p>
         </div>
-      ))}
+      ) : (
+        <div style={{ display: 'grid', gap: '20px', maxWidth: '800px' }}>
+          {notes.map(note => (
+            <div 
+              key={note._id}
+              style={{
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                padding: '20px',
+                backgroundColor: '#fafafa'
+              }}
+            >
+              {editingNote?._id === note._id ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  <input 
+                    value={editTitle}
+                    onChange={e => setEditTitle(e.target.value)}
+                    placeholder="Title"
+                    style={{
+                      padding: '10px',
+                      fontSize: '16px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px'
+                    }}
+                  />
+                  <textarea 
+                    value={editContent}
+                    onChange={e => setEditContent(e.target.value)}
+                    placeholder="Content"
+                    rows={4}
+                    style={{
+                      padding: '10px',
+                      fontSize: '14px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      resize: 'vertical',
+                      fontFamily: 'inherit'
+                    }}
+                  />
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      onClick={handleSaveEdit}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Save
+                    </button>
+                    <button 
+                      onClick={cancelEdit}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#6c757d',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h3 style={{ margin: '0 0 10px 0', color: 'black' }}>{note.title}</h3>
+                  <p style={{ 
+                    margin: '0 0 15px 0', 
+                    color: '#333',
+                    whiteSpace: 'pre-wrap',
+                    lineHeight: '1.5'
+                  }}>
+                    {note.content}
+                  </p>
+                  <div style={{ 
+                    display: 'flex', 
+                    gap: '10px',
+                    fontSize: '12px',
+                    color: '#666',
+                    marginBottom: '15px'
+                  }}>
+                    <span>Created: {new Date(note.createdAt).toLocaleDateString()}</span>
+                    {note.updatedAt && note.updatedAt !== note.createdAt && (
+                      <span>Updated: {new Date(note.updatedAt).toLocaleDateString()}</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      onClick={() => handleEdit(note)}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(note._id)}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#dc3545',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

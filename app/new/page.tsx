@@ -30,23 +30,22 @@ export default function NewNotePage() {
         }),
       })
 
+      const result = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to save note')
+        throw new Error(result.error || 'Failed to save note')
       }
 
-      const savedNote = await response.json()
-      console.log('Note saved:', savedNote)
-
+      console.log('Note saved successfully:', result.data)
       router.push('/mynotes')
-    } catch (error) {
+      router.refresh() // Refresh to show new note
+    } catch (error: any) {
       console.error('Error saving note:', error)
-      const message = error instanceof Error ? error.message : 'Unknown error'
-      alert(`Error saving note: ${message}`)
+      alert(`Error: ${error.message}`)
     } finally {
       setLoading(false)
     }
   }
-
 
   return (
     <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>

@@ -2,63 +2,79 @@ import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 
 export async function GET(request: Request) {
-  const client = await clientPromise;
-  const db = client.db('notesapp');
-  const notesCollection = db.collection('notes');
-
   try {
+    const client = await clientPromise;
+    const db = client.db('notesapp');
+    const notesCollection = db.collection('notes');
+
     const url = new URL(request.url);
     const bin = url.searchParams.get('bin');
-    const filter = bin === 'true' ? { in_bin: true } : { in_bin: false };
+    const filter = bin === 'true' ? { in_bin: true } : { in_bin: { $ne: true } };
 
     const notes = await notesCollection
       .find(filter)
       .sort({ updatedAt: -1 })
       .toArray();
 
-    const notesWithStringId = notes.map((note: any) => {
-      const idString = note._id?.toString();
-      return {
-        ...note,
-        _id: idString,
-        id: idString,
-      };
-    });
+    const notesWithStringId = notes.map((note: any) => ({
+      ...note,
+      _id: note._id.toString(),
+      id: note._id.toString(),
+    }));
 
-    return NextResponse.json(notesWithStringId);
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ success: true, data: notesWithStringId });
+  } catch (error: any) {
+    console.error('GET Notes Error:', error);
+    return NextResponse.json(
+      { success: false, error: error.message || 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: Request) {
-  const client = await clientPromise;
-  const db = client.db('notesapp');
-  const notesCollection = db.collection('notes');
-
   try {
+    const client = await clientPromise;
+    const db = client.db('notesapp');
+    const notesCollection = db.collection('notes');
+
     const body = await request.json();
     const { title, content } = body;
+
+    // Validation
+    if (!title?.trim() || !content?.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Title and content are required' },
+        { status: 400 }
+      );
+    }
+
     const newNote = {
-      title,
-      content,
+      title: title.trim(),
+      content: content.trim(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       in_bin: false,
+      favorite: false,
     };
 
     const result = await notesCollection.insertOne(newNote);
-    const idString = result.insertedId.toString();
+    
     const createdNote = {
       ...newNote,
-      _id: idString,
-      id: idString,
+      _id: result.insertedId.toString(),
+      id: result.insertedId.toString(),
     };
 
-    return NextResponse.json(createdNote, { status: 201 });
-  } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { success: true, data: createdNote },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error('POST Note Error:', error);
+    return NextResponse.json(
+      { success: false, error: error.message || 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
