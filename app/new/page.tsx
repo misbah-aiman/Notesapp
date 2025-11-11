@@ -1,7 +1,11 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { noteService } from '@/app/services/noteServices'
+
+interface Note {
+  title: string
+  content: string
+}
 
 export default function NewNotePage() {
   const router = useRouter()
@@ -14,13 +18,27 @@ export default function NewNotePage() {
     if (!title.trim() || !content.trim()) return
     
     setLoading(true)
-    
+
     try {
-      await noteService.createNote({
-        title: title.trim(),
-        content: content.trim()
+      const response = await fetch('/api/notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: title.trim(),
+          content: content.trim(),
+        } as Note),
       })
-      
+
+      if (!response.ok) {
+        throw new Error('Failed to create note')
+      }
+
+      const newNote = await response.json()
+      console.log('Created Note:', newNote)
+
+      // Redirect to mynotes page after successful save
       router.push('/mynotes')
     } catch (error) {
       console.error('Error saving note:', error)
@@ -29,41 +47,19 @@ export default function NewNotePage() {
       setLoading(false)
     }
   }
-return (
-    <div style={{ 
-      minHeight: '100vh', 
-      padding: '50px',
-      backgroundColor: 'white'
-    }}>
-      <div style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '15px',
-        marginBottom: '30px'
-      }}>
+
+  return (
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
         <div style={{
-          width: '40px',
-          height: '40px',
-          backgroundColor: '#e8f5e8',
-          borderRadius: '10px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          color: 'black'
-        }}
-        >+
-        </div>
+          width: '40px', height: '40px', backgroundColor: '#e8f5e8',
+          borderRadius: '10px', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', fontSize: '20px', fontWeight: 'bold', color: 'black'
+        }}>+</div>
         <h1 style={{ margin: 0, color: 'black' }}>New Note</h1>
       </div>
-      
-      <form onSubmit={handleSubmit} style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '30px',
-        maxWidth: '600px'
-      }}>
+
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '600px' }}>
         <input
           placeholder="Title"
           value={title}
@@ -71,23 +67,8 @@ return (
           required
           disabled={loading}
           style={{
-            padding: '15px',
-            fontSize: '16px',
-            border: 'none',
-            borderRadius: '8px',
-            backgroundColor: 'rgba(0, 0, 0, 0.05)',
-            outline: 'none',
-            transition: 'background-color 0.2s ease',
-            opacity: loading ? 0.7 : 1,
-            color: 'black'
-          }}
-          onFocus={(e) => {
-            if (!loading) {
-              e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.08)'
-            }
-          }}
-          onBlur={(e) => {
-            e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'
+            padding: '15px', fontSize: '16px', border: 'none', borderRadius: '8px',
+            backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', opacity: loading ? 0.7 : 1
           }}
         />
         <textarea
@@ -98,54 +79,19 @@ return (
           required
           disabled={loading}
           style={{
-            padding: '15px',
-            fontSize: '16px',
-            border: 'none',
-            borderRadius: '8px',
-            backgroundColor: 'rgba(0, 0, 0, 0.05)',
-            outline: 'none',
-            resize: 'vertical',
-            minHeight: '200px',
-            fontFamily: 'inherit',
-            transition: 'background-color 0.2s ease, min-height 0.2s ease',
-            opacity: loading ? 0.7 : 1,
-            color: 'black'
-          }}
-          onFocus={(e) => {
-            if (!loading) {
-              e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.08)'
-              e.target.style.minHeight = '250px'
-            }
-          }}
-          onBlur={(e) => {
-            e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.05)'
-            e.target.style.minHeight = '200px'
+            padding: '15px', fontSize: '16px', border: 'none', borderRadius: '8px',
+            backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', minHeight: '200px',
+            fontFamily: 'inherit', resize: 'vertical', opacity: loading ? 0.7 : 1
           }}
         />
-        <button 
+        <button
           type="submit"
           disabled={loading}
           style={{
-            padding: '15px 30px',
-            fontSize: '16px',
+            padding: '15px 30px', fontSize: '16px',
             backgroundColor: loading ? '#6c757d' : '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            alignSelf: 'flex-start',
-            transition: 'background-color 0.2s ease',
-            opacity: loading ? 0.7 : 1
-          }}
-          onMouseEnter={(e) => {
-            if (!loading) {
-              e.currentTarget.style.backgroundColor = '#45a049'
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!loading) {
-              e.currentTarget.style.backgroundColor = '#4CAF50'
-            }
+            color: 'white', border: 'none', borderRadius: '8px',
+            cursor: loading ? 'not-allowed' : 'pointer'
           }}
         >
           {loading ? 'Saving...' : 'Save Note'}
