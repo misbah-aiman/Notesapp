@@ -9,7 +9,6 @@ export default function NewNotePage() {
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // This function handles form submission and saving note
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || !content.trim()) {
@@ -38,7 +37,6 @@ export default function NewNotePage() {
       const savedNote = await response.json()
       console.log('Note saved:', savedNote)
 
-      // After saving, go to My Notes page
       router.push('/mynotes')
     } catch (error) {
       console.error('Error saving note:', error)
@@ -48,38 +46,51 @@ export default function NewNotePage() {
     }
   }
 
+
   return (
     <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>
-      <h1>New Note</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '600px' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
+        <div style={{
+          width: '40px', height: '40px', backgroundColor: '#e8f5e8',
+          borderRadius: '10px', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', fontSize: '20px', fontWeight: 'bold', color: 'black'
+        }}>+</div>
+        <h1 style={{ margin: 0, color: 'black' }}>New Note</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '600px' }}>
         <input
           placeholder="Title"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          disabled={loading}
           required
-          style={{ padding: '12px', fontSize: '16px', borderRadius: '8px', border: '1px solid #ccc' }}
+          disabled={loading}
+          style={{
+            padding: '15px', fontSize: '16px', border: 'none', borderRadius: '8px',
+            backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', opacity: loading ? 0.7 : 1
+          }}
         />
         <textarea
           placeholder="Content"
           value={content}
           onChange={e => setContent(e.target.value)}
-          disabled={loading}
-          required
           rows={6}
-          style={{ padding: '12px', fontSize: '16px', borderRadius: '8px', border: '1px solid #ccc' }}
+          required
+          disabled={loading}
+          style={{
+            padding: '15px', fontSize: '16px', border: 'none', borderRadius: '8px',
+            backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', minHeight: '200px',
+            fontFamily: 'inherit', resize: 'vertical', opacity: loading ? 0.7 : 1
+          }}
         />
         <button
           type="submit"
           disabled={loading}
           style={{
-            padding: '12px 20px',
-            fontSize: '16px',
-            borderRadius: '8px',
-            border: 'none',
-            backgroundColor: loading ? '#aaa' : '#4CAF50',
-            color: 'white',
-            cursor: loading ? 'not-allowed' : 'pointer',
+            padding: '15px 30px', fontSize: '16px',
+            backgroundColor: loading ? '#6c757d' : '#4CAF50',
+            color: 'white', border: 'none', borderRadius: '8px',
+            cursor: loading ? 'not-allowed' : 'pointer'
           }}
         >
           {loading ? 'Saving...' : 'Save Note'}
