@@ -26,7 +26,11 @@ export async function PUT(request: Request, context: any) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 });
     }
 
-    if (updatedNote._id) updatedNote._id = updatedNote._id.toString();
+    const idString = updatedNote._id?.toString();
+    if (idString) {
+      updatedNote._id = idString;
+      (updatedNote as any).id = idString;
+    }
 
     return NextResponse.json(updatedNote);
   } catch (error) {

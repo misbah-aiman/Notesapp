@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 
-// GET /api/notes?bin=true|false
 export async function GET(request: Request) {
   const client = await clientPromise;
   const db = client.db('notesapp');
@@ -17,10 +16,14 @@ export async function GET(request: Request) {
       .sort({ updatedAt: -1 })
       .toArray();
 
-    const notesWithStringId = notes.map((note: any) => ({
-      ...note,
-      _id: note._id?.toString(),
-    }));
+    const notesWithStringId = notes.map((note: any) => {
+      const idString = note._id?.toString();
+      return {
+        ...note,
+        _id: idString,
+        id: idString,
+      };
+    });
 
     return NextResponse.json(notesWithStringId);
   } catch (error) {
@@ -47,9 +50,11 @@ export async function POST(request: Request) {
     };
 
     const result = await notesCollection.insertOne(newNote);
+    const idString = result.insertedId.toString();
     const createdNote = {
       ...newNote,
-      _id: result.insertedId.toString(),
+      _id: idString,
+      id: idString,
     };
 
     return NextResponse.json(createdNote, { status: 201 });
