@@ -1,54 +1,61 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 import clientPromise from '../../../../lib/mongodb';
-import { Note, UpdateNoteData } from '../../../../lib/types';
+import { UpdateNoteData } from '../../../../lib/types';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+// PUT /api/notes/[id]
+export async function PUT(request: Request, context: any) {
+  const { id } = await Promise.resolve(context?.params) as { id: string };
   const client = await clientPromise;
   const db = client.db('notesapp');
-  const notesCollection = db.collection<Note>('notes');
+  const notesCollection = db.collection('notes');
 
   try {
-    switch (req.method) {
-      case 'PUT':
-        const updateData: UpdateNoteData = req.body;
-        const filter: any = { _id: new ObjectId(id as string) };
-        const update = {
-          $set: {
-            ...updateData,
-            updatedAt: new Date().toISOString(),
-          },
-        };
-        const options = { returnDocument: 'after' as const };
+    const updateData: UpdateNoteData = await request.json();
+    const filter: any = { _id: new ObjectId(id as string) };
+    const update = {
+      $set: {
+        ...updateData,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    const options = { returnDocument: 'after' as const };
 
-        const result = await notesCollection.findOneAndUpdate(filter, update, options);
+    const result = await notesCollection.findOneAndUpdate(filter, update, options);
+    const updatedNote = result && 'value' in result ? result.value : result;
 
-        const updatedNote = result && 'value' in result ? result.value : result;
-
-        if (!updatedNote) {
-          return res.status(404).json({ error: 'Note not found' });
-        }
-
-        res.status(200).json(updatedNote);
-        break;
-
-      case 'DELETE':
-        const deleteFilter: any = { _id: new ObjectId(id as string) };
-        const deleteResult = await notesCollection.deleteOne(deleteFilter);
-        
-        if (deleteResult.deletedCount === 0) {
-          return res.status(404).json({ error: 'Note not found' });
-        }
-
-        res.status(200).json({ message: 'Note deleted permanently' });
-        break;
-
-      default:
-        res.setHeader('Allow', ['PUT', 'DELETE']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+    if (!updatedNote) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 });
     }
+
+    // convert ObjectId to string if present
+    if (updatedNote._id) updatedNote._id = updatedNote._id.toString();
+
+    return NextResponse.json(updatedNote);
   } catch (error) {
-    res.status(500).json({ error: 'Operation failed' });
+    console.error('API Error:', error);
+    return NextResponse.json({ error: 'Operation failed' }, { status: 500 });
+  }
+}
+
+// DELETE /api/notes/[id]
+export async function DELETE(request: Request, context: any) {
+  const { id } = await Promise.resolve(context?.params) as { id: string };
+  const client = await clientPromise;
+  const db = client.db('notesapp');
+  const notesCollection = db.collection('notes');
+
+  try {
+    const deleteFilter: any = { _id: new ObjectId(id as string) };
+    const deleteResult = await notesCollection.deleteOne(deleteFilter);
+
+    if (deleteResult.deletedCount === 0) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Note deleted permanently' });
+  } catch (error) {
+    console.error('API Error:', error);
+    return NextResponse.json({ error: 'Operation failed' }, { status: 500 });
   }
 }
