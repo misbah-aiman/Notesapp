@@ -40,7 +40,8 @@ export default function NewNotePage() {
       router.push('/mynotes')
     } catch (error) {
       console.error('Error saving note:', error)
-      alert('Error saving note. Please try again.')
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      alert(`Error saving note: ${message}`)
     } finally {
       setLoading(false)
     }

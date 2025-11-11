@@ -32,7 +32,6 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/notes
 export async function POST(request: Request) {
   const client = await clientPromise;
   const db = client.db('notesapp');
