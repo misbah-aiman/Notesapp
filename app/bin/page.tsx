@@ -43,8 +43,14 @@ export default function BinPage() {
       const res = await fetch(`/api/notes/${id}`, { 
         method: 'POST'
       })
-      const result = await res.json()
-      
+      let result: any = {}
+      try {
+        result = await res.json()
+      } catch (parseErr) {
+        // empty or non-json response
+        result = {}
+      }
+
       if (!res.ok) {
         throw new Error(result.error || 'Failed to restore note')
       }
@@ -64,8 +70,13 @@ export default function BinPage() {
       const res = await fetch(`/api/notes/${id}`, { 
         method: 'PATCH' 
       })
-      const result = await res.json()
-      
+      let result: any = {}
+      try {
+        result = await res.json()
+      } catch (parseErr) {
+        result = {}
+      }
+
       if (!res.ok) {
         throw new Error(result.error || 'Failed to delete note permanently')
       }
