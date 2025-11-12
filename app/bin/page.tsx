@@ -40,8 +40,10 @@ export default function BinPage() {
 
   const handleRestore = async (id: string) => {
     try {
-      const res = await fetch(`/api/notes/${id}`, { 
-        method: 'POST'
+      const res = await fetch(`/api/notes/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restore' }),
       })
       let result: any = {}
       try {
@@ -67,8 +69,10 @@ export default function BinPage() {
     if (!confirm('Are you sure? This will permanently delete the note!')) return
     
     try {
-      const res = await fetch(`/api/notes/${id}`, { 
-        method: 'PATCH' 
+      const res = await fetch(`/api/notes/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'deletePermanent' }),
       })
       let result: any = {}
       try {
