@@ -29,11 +29,17 @@ export async function GET(request: Request, context: any) {
 
 export async function PUT(request: Request, context: any) {
   try {
-    const { id } = context.params as { id: string }
+    const { id } = await Promise.resolve(context?.params) as { id: string }
     const body = await request.json()
 
     const client = await clientPromise
     const db = client.db('notesapp')
+
+    // ensure id is defined and log for debugging
+    if (!id) {
+      console.error('PUT missing id in params', { params: context?.params })
+      return NextResponse.json({ error: 'Note id is required' }, { status: 400 })
+    }
 
     const result = await db.collection('notes').findOneAndUpdate(
       { _id: new ObjectId(id) },
@@ -67,7 +73,7 @@ export async function PUT(request: Request, context: any) {
 
 export async function DELETE(request: Request, context: any) {
   try {
-    const { id } = context.params as { id: string }
+    const { id } = await Promise.resolve(context?.params) as { id: string }
 
     const client = await clientPromise
     const db = client.db('notesapp')
