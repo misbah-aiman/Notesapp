@@ -41,7 +41,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { title, content } = body;
 
-    // Validation
     if (!title?.trim() || !content?.trim()) {
       return NextResponse.json(
         { success: false, error: 'Title and content are required' },

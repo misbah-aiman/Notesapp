@@ -1,268 +1,116 @@
-import { NextResponse } from 'next/server';
-import { ObjectId } from 'mongodb';
-import clientPromise from '../../../../lib/mongodb';
+import { NextResponse } from 'next/server'
+import { ObjectId } from 'mongodb'
+import clientPromise from '../../../../lib/mongodb'
 
-export async function PUT(request: Request, context: any) {
+export async function GET(request: Request, context: any) {
+  const { id } = await Promise.resolve(context?.params) as { id: string }
+
   try {
-    // ✅ Get the ID first
-    const { id } = await context.params;
-    
-    console.log('🔄 API PUT - Received ID:', id);
-    
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: 'Note ID is required' },
-        { status: 400 }
-      );
+    const client = await clientPromise
+    const db = client.db('notesapp')
+    const note = await db.collection('notes').findOne({ _id: new ObjectId(id) })
+
+    if (!note) return NextResponse.json({ error: 'Note not found' }, { status: 404 })
+
+    const normalized = {
+      ...note,
+      _id: note._id.toString(),
+      id: note._id.toString(),
+      createdAt: note.createdAt ? new Date(note.createdAt).toISOString() : undefined,
+      updatedAt: note.updatedAt ? new Date(note.updatedAt).toISOString() : undefined,
     }
 
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, error: 'Valid note ID is required' },
-        { status: 400 }
-      );
-    }
-
-    // ✅ SAFE JSON PARSING
-    let updateData;
-    try {
-      const bodyText = await request.text();
-      console.log('🔄 API PUT - Raw request body:', bodyText);
-      
-      if (!bodyText || bodyText.trim() === '') {
-        return NextResponse.json(
-          { success: false, error: 'Request body is empty' },
-          { status: 400 }
-        );
-      }
-      
-      updateData = JSON.parse(bodyText);
-      console.log('🔄 API PUT - Parsed update data:', updateData);
-    } catch (jsonError) {
-      console.error('❌ JSON Parse Error:', jsonError);
-      return NextResponse.json(
-        { success: false, error: 'Invalid JSON in request body' },
-        { status: 400 }
-      );
-    }
-
-    // ✅ VALIDATION
-    if (!updateData || (typeof updateData !== 'object')) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid request data' },
-        { status: 400 }
-      );
-    }
-
-    const hasTitle = updateData.title && updateData.title.trim().length > 0;
-    const hasContent = updateData.content && updateData.content.trim().length > 0;
-
-    if (!hasTitle && !hasContent) {
-      return NextResponse.json(
-        { success: false, error: 'Title or content is required for update' },
-        { status: 400 }
-      );
-    }
-
-    // ✅ DATABASE OPERATION
-    const client = await clientPromise;
-    const db = client.db('notesapp');
-    const notesCollection = db.collection('notes');
-
-    const filter = { _id: new ObjectId(id) };
-    const update = {
-      $set: {
-        ...(hasTitle && { title: updateData.title.trim() }),
-        ...(hasContent && { content: updateData.content.trim() }),
-        updatedAt: new Date().toISOString(),
-      },
-    };
-
-    const result = await notesCollection.findOneAndUpdate(filter, update, {
-      returnDocument: 'after'
-    });
-
-    if (!result) {
-      return NextResponse.json(
-        { success: false, error: 'Note not found' },
-        { status: 404 }
-      );
-    }
-
-    const updatedNote = {
-      ...result,
-      _id: result._id.toString(),
-      id: result._id.toString(),
-    };
-
-    console.log('✅ API PUT - Success:', updatedNote);
-    return NextResponse.json({ success: true, data: updatedNote });
-
-  } catch (error: any) {
-    console.error('❌ API PUT Error:', error);
-    return NextResponse.json(
-      { success: false, error: error.message || 'Operation failed' },
-      { status: 500 }
-    );
+    return NextResponse.json(normalized)
+  } catch (error) {
+    console.error('Error fetching note:', error)
+    return NextResponse.json({ error: 'Failed to fetch note' }, { status: 500 })
   }
 }
 
-// RESTORE - Move note out of bin
-export async function POST(request: Request, context: any) {
+export async function PUT(request: Request, context: any) {
+  const { id } = await Promise.resolve(context?.params) as { id: string }
+  const body = await request.json()
+
   try {
-    const { id } = await context.params;
-    
-    console.log('🔄 API RESTORE - ID:', id);
-    
-    if (!id || !ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, error: 'Valid note ID is required' },
-        { status: 400 }
-      );
-    }
+    const client = await clientPromise
+    const db = client.db('notesapp')
 
-    const client = await clientPromise;
-    const db = client.db('notesapp');
-    const notesCollection = db.collection('notes');
-
-    const updateResult = await notesCollection.findOneAndUpdate(
+    const result = await db.collection('notes').findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { 
-        $set: { 
-          in_bin: false,
-          updatedAt: new Date().toISOString()
-        } 
+      {
+        $set: {
+          title: body.title,
+          content: body.content,
+          updatedAt: new Date().toISOString(),
+        },
       },
       { returnDocument: 'after' }
-    );
+    )
 
-    if (!updateResult) {
-      return NextResponse.json(
-        { success: false, error: 'Note not found' },
-        { status: 404 }
-      );
+    if (!result || !result.value) return NextResponse.json({ error: 'Note not found' }, { status: 404 })
+
+    const updated = result.value
+    const normalized = {
+      ...updated,
+      _id: (updated._id as any).toString(),
+      id: (updated._id as any).toString(),
+      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : undefined,
+      updatedAt: updated.updatedAt ? new Date(updated.updatedAt).toISOString() : undefined,
     }
 
-    const restoredNote = {
-      ...updateResult,
-      _id: updateResult._id.toString(),
-      id: updateResult._id.toString(),
-    };
-
-    return NextResponse.json({ 
-      success: true, 
-      data: restoredNote,
-      message: 'Note restored from bin' 
-    });
-  } catch (error: any) {
-    console.error('❌ API RESTORE Error:', error);
-    return NextResponse.json(
-      { success: false, error: error.message || 'Operation failed' },
-      { status: 500 }
-    );
+    return NextResponse.json(normalized)
+  } catch (error) {
+    console.error('Error updating note:', error)
+    return NextResponse.json({ error: 'Failed to update note' }, { status: 500 })
   }
 }
 
 export async function DELETE(request: Request, context: any) {
+  const { id } = await Promise.resolve(context?.params) as { id: string }
+
   try {
-    const { id } = await context.params;
-    
-    console.log('🗑️ API DELETE - Moving to bin ID:', id);
-    
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: 'Note ID is required' },
-        { status: 400 }
-      );
-    }
+    const client = await clientPromise
+    const db = client.db('notesapp')
 
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, error: 'Valid note ID is required' },
-        { status: 400 }
-      );
-    }
-
-    const client = await clientPromise;
-    const db = client.db('notesapp');
-    const notesCollection = db.collection('notes');
-
-    // ✅ SOFT DELETE - Mark as in_bin instead of deleting
-    const updateResult = await notesCollection.findOneAndUpdate(
+    const result = await db.collection('notes').findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { 
-        $set: { 
-          in_bin: true,
-          updatedAt: new Date().toISOString()
-        } 
-      },
+      { $set: { in_bin: true, deletedAt: new Date().toISOString() } },
       { returnDocument: 'after' }
-    );
+    )
 
-    if (!updateResult) {
-      return NextResponse.json(
-        { success: false, error: 'Note not found' },
-        { status: 404 }
-      );
-    }
+  if (!result || !result.value) return NextResponse.json({ error: 'Note not found' }, { status: 404 })
 
-    const updatedNote = {
-      ...updateResult,
-      _id: updateResult._id.toString(),
-      id: updateResult._id.toString(),
-    };
-
-    return NextResponse.json({ 
-      success: true, 
-      data: updatedNote,
-      message: 'Note moved to bin' 
-    });
-  } catch (error: any) {
-    console.error('❌ API DELETE Error:', error);
-    return NextResponse.json(
-      { success: false, error: error.message || 'Operation failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Note moved to bin successfully' })
+  } catch (error) {
+    console.error('Error moving note to bin:', error)
+    return NextResponse.json({ error: 'Failed to move note to bin' }, { status: 500 })
   }
-} 
+}
 
 export async function PATCH(request: Request, context: any) {
+  const { id } = await Promise.resolve(context?.params) as { id: string }
+  const { action } = await request.json()
+
   try {
-    const { id } = await context.params;
-    
-    console.log('💀 API PERMANENT DELETE - ID:', id);
-    
-    if (!id || !ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, error: 'Valid note ID is required' },
-        { status: 400 }
-      );
+    const client = await clientPromise
+    const db = client.db('notesapp')
+
+    if (action === 'restore') {
+      await db.collection('notes').updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { in_bin: false }, $unset: { deletedAt: '' } }
+      )
+      return NextResponse.json({ message: 'Note restored successfully' })
     }
 
-    const client = await clientPromise;
-    const db = client.db('notesapp');
-    const notesCollection = db.collection('notes');
-
-    const deleteResult = await notesCollection.deleteOne({ 
-      _id: new ObjectId(id) 
-    });
-
-    if (deleteResult.deletedCount === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Note not found' },
-        { status: 404 }
-      );
+    if (action === 'deletePermanent') {
+      await db.collection('notes').deleteOne({ _id: new ObjectId(id) })
+      return NextResponse.json({ message: 'Note permanently deleted' })
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Note permanently deleted' 
-    });
-  } catch (error: any) {
-    console.error('❌ API PERMANENT DELETE Error:', error);
-    return NextResponse.json(
-      { success: false, error: error.message || 'Operation failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+  } catch (error) {
+    console.error('Error restoring/deleting note:', error)
+    return NextResponse.json({ error: 'Failed to restore/delete note' }, { status: 500 })
   }
 }
