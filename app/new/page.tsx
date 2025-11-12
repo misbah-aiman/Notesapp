@@ -38,7 +38,7 @@ export default function NewNotePage() {
 
       console.log('Note saved successfully:', result.data)
       router.push('/mynotes')
-      router.refresh() // Refresh to show new note
+      router.refresh() 
     } catch (error: any) {
       console.error('Error saving note:', error)
       alert(`Error: ${error.message}`)

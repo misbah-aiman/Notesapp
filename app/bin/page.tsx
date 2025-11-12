@@ -29,7 +29,7 @@ export default function BinPage() {
         throw new Error(result.error || 'Failed to fetch bin notes')
       }
       
-      setBin(result.data) // ✅ Now using result.data
+      setBin(result.data)
     } catch (error) {
       console.error('Fetch bin error:', error)
       alert('Failed to load bin notes')
@@ -41,7 +41,7 @@ export default function BinPage() {
   const handleRestore = async (id: string) => {
     try {
       const res = await fetch(`/api/notes/${id}`, { 
-        method: 'POST' // ✅ Changed to POST for restore
+        method: 'POST'
       })
       const result = await res.json()
       
@@ -62,7 +62,7 @@ export default function BinPage() {
     
     try {
       const res = await fetch(`/api/notes/${id}`, { 
-        method: 'PATCH' // ✅ Using PATCH for permanent delete
+        method: 'PATCH' 
       })
       const result = await res.json()
       
