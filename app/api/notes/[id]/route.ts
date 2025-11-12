@@ -53,17 +53,19 @@ export async function PUT(request: Request, context: any) {
       { returnDocument: 'after' }
     )
 
-    if (!result || !result.value) {
+    // findOneAndUpdate may return an object with `value` or the document directly depending on driver/version.
+    const updatedDoc = result && typeof result === 'object' && 'value' in result ? (result as any).value : result
+
+    if (!updatedDoc) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 })
     }
 
-    const updated = result.value
     return NextResponse.json({
-      ...updated,
-      _id: updated._id.toString(),
-      id: updated._id.toString(),
-      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : undefined,
-      updatedAt: updated.updatedAt ? new Date(updated.updatedAt).toISOString() : undefined,
+      ...updatedDoc,
+      _id: (updatedDoc._id as any).toString(),
+      id: (updatedDoc._id as any).toString(),
+      createdAt: updatedDoc.createdAt ? new Date(updatedDoc.createdAt).toISOString() : undefined,
+      updatedAt: updatedDoc.updatedAt ? new Date(updatedDoc.updatedAt).toISOString() : undefined,
     })
   } catch (error) {
     console.error('Error updating note:', error)
@@ -84,7 +86,9 @@ export async function DELETE(request: Request, context: any) {
       { returnDocument: 'after' }
     )
 
-    if (!result || !result.value) {
+    const updatedDoc = result && typeof result === 'object' && 'value' in result ? (result as any).value : result
+
+    if (!updatedDoc) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 })
     }
 
