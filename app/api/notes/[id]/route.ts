@@ -28,10 +28,10 @@ export async function GET(request: Request, context: any) {
 }
 
 export async function PUT(request: Request, context: any) {
-  const { id } = await Promise.resolve(context?.params) as { id: string }
-  const body = await request.json()
-
   try {
+    const { id } = context.params as { id: string }
+    const body = await request.json()
+
     const client = await clientPromise
     const db = client.db('notesapp')
 
@@ -47,18 +47,18 @@ export async function PUT(request: Request, context: any) {
       { returnDocument: 'after' }
     )
 
-    if (!result || !result.value) return NextResponse.json({ error: 'Note not found' }, { status: 404 })
-
-    const updated = result.value
-    const normalized = {
-      ...updated,
-      _id: (updated._id as any).toString(),
-      id: (updated._id as any).toString(),
-      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : undefined,
-      updatedAt: updated.updatedAt ? new Date(updated.updatedAt).toISOString() : undefined,
+    if (!result || !result.value) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 })
     }
 
-    return NextResponse.json(normalized)
+    const updated = result.value
+    return NextResponse.json({
+      ...updated,
+      _id: updated._id.toString(),
+      id: updated._id.toString(),
+      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : undefined,
+      updatedAt: updated.updatedAt ? new Date(updated.updatedAt).toISOString() : undefined,
+    })
   } catch (error) {
     console.error('Error updating note:', error)
     return NextResponse.json({ error: 'Failed to update note' }, { status: 500 })
@@ -66,9 +66,9 @@ export async function PUT(request: Request, context: any) {
 }
 
 export async function DELETE(request: Request, context: any) {
-  const { id } = await Promise.resolve(context?.params) as { id: string }
-
   try {
+    const { id } = context.params as { id: string }
+
     const client = await clientPromise
     const db = client.db('notesapp')
 
@@ -78,7 +78,9 @@ export async function DELETE(request: Request, context: any) {
       { returnDocument: 'after' }
     )
 
-  if (!result || !result.value) return NextResponse.json({ error: 'Note not found' }, { status: 404 })
+    if (!result || !result.value) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 })
+    }
 
     return NextResponse.json({ message: 'Note moved to bin successfully' })
   } catch (error) {
@@ -86,6 +88,7 @@ export async function DELETE(request: Request, context: any) {
     return NextResponse.json({ error: 'Failed to move note to bin' }, { status: 500 })
   }
 }
+
 
 export async function PATCH(request: Request, context: any) {
   const { id } = await Promise.resolve(context?.params) as { id: string }
