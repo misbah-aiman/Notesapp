@@ -67,7 +67,8 @@ export default function NewNotePage() {
           disabled={loading}
           style={{
             padding: '15px', fontSize: '16px', border: 'none', borderRadius: '8px',
-            backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', opacity: loading ? 0.7 : 1
+            backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', opacity: loading ? 0.7 : 1,
+            color: 'black'
           }}
         />
         <textarea
@@ -80,7 +81,8 @@ export default function NewNotePage() {
           style={{
             padding: '15px', fontSize: '16px', border: 'none', borderRadius: '8px',
             backgroundColor: 'rgba(0,0,0,0.05)', outline: 'none', minHeight: '200px',
-            fontFamily: 'inherit', resize: 'vertical', opacity: loading ? 0.7 : 1
+            fontFamily: 'inherit', resize: 'vertical', opacity: loading ? 0.7 : 1,
+            color: 'black'
           }}
         />
         <button
