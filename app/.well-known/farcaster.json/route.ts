@@ -37,6 +37,7 @@ return Response.json({
     "ogTitle": "Example Mini App",
     "ogDescription": "Challenge friends in real time.",
     "ogImageUrl": "https://ex.co/og.png",
-    "noindex": true}
-    } ); 
+    "noindex": true
+  }
+});
 }
