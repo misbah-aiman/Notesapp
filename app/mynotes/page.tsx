@@ -80,7 +80,6 @@ export default function MyNotesPage() {
   console.log('Note ID:', editingNote._id)
   
   try {
-    // ✅ Create the request body properly
     const requestBody = {
       title: editTitle.trim(),
       content: editContent.trim()
