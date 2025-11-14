@@ -7,13 +7,13 @@ return Object.fromEntries(
 export async function GET() {
 const URL = process.env.NEXT_PUBLIC_URL as string;
 return Response.json({
-  "accountAssociation": {  // these will be added in step 5
+  "accountAssociation": { 
     "header": "",
     "payload": "",
     "signature": ""
   },
   "baseBuilder": {
-    "ownerAddress": "0x" // add your Base Account address here
+    "ownerAddress": "0x9491af0e35D1b5816a5e7f5e3C75Cd45af1eBBE9"
   },
   "miniapp": {
     "version": "1",
@@ -37,7 +37,6 @@ return Response.json({
     "ogTitle": "Example Mini App",
     "ogDescription": "Challenge friends in real time.",
     "ogImageUrl": "https://ex.co/og.png",
-    "noindex": true
-  }
-} ); 
+    "noindex": true}
+    } ); 
 }
