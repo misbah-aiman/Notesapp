@@ -1,22 +1,36 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import { useEffect } from 'react'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 export default function HomePage() {
   const router = useRouter()
 
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        await sdk.actions.ready()
+        console.log('Notes app is ready!')
+      } catch (error) {
+        console.error('Failed to initialize app:', error)
+      }
+    }
+
+    initializeApp()
+  }, [])
+
   return (
-        <div style={styles.container}>
-          <div style={styles.titleContainer}>
-            <h1 style={styles.title}>Notes App</h1>
-          </div>
-      
-          <div style={styles.sidebar}>
-            <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
-            <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
-            <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
-          </div>
-        </div>
+    <div style={styles.container}>
+      <div style={styles.titleContainer}>
+        <h1 style={styles.title}>Notes App</h1>
+      </div>
+  
+      <div style={styles.sidebar}>
+        <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
+        <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
+        <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
+      </div>
+    </div>
   )
 }
 
