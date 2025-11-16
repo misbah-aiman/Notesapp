@@ -7,7 +7,7 @@ return Object.fromEntries(
 export async function GET() {
 const URL = process.env.NEXT_PUBLIC_URL as string;
 return Response.json({
-  "accountAssociation": { 
+  "accountAssociation": {
     "header": "",
     "payload": "",
     "signature": ""
@@ -17,26 +17,26 @@ return Response.json({
   },
   "miniapp": {
     "version": "1",
-    "name": "Example Mini App",
-    "homeUrl": "https://ex.co",
-    "iconUrl": "https://ex.co/i.png",
-    "splashImageUrl": "https://ex.co/l.png",
+    "name": "Notes App",
+    "homeUrl": "https://notesapp-red-eta.vercel.app/",
+    "iconUrl": "https://notesapp-red-eta.vercel.app/icon.png",
+    "splashImageUrl": "https://notesapp-red-eta.vercel.app/splash.png",
     "splashBackgroundColor": "#000000",
-    "webhookUrl": "https://ex.co/api/webhook",
-    "subtitle": "Fast, fun, social",
-    "description": "A fast, fun way to challenge friends in real time.",
+    "webhookUrl": "https://notesapp-red-eta.vercel.app/api/webhook",
+    "subtitle": "Simple, social note-taking",
+    "description": "A fast and simple way to take notes and share with friends on Farcaster.",
     "screenshotUrls": [
-      "https://ex.co/s1.png",
-      "https://ex.co/s2.png",
-      "https://ex.co/s3.png"
+      "https://notesapp-red-eta.vercel.app/screenshots/1.png",
+      "https://notesapp-red-eta.vercel.app/screenshots/2.png",
+      "https://notesapp-red-eta.vercel.app/screenshots/3.png"
     ],
     "primaryCategory": "social",
-    "tags": ["example", "miniapp", "baseapp"],
-    "heroImageUrl": "https://ex.co/og.png",
-    "tagline": "Play instantly",
-    "ogTitle": "Example Mini App",
-    "ogDescription": "Challenge friends in real time.",
-    "ogImageUrl": "https://ex.co/og.png",
+    "tags": ["notes", "productivity", "miniapp"],
+    "heroImageUrl": "https://notesapp-red-eta.vercel.app/og.png",
+    "tagline": "Take notes instantly",
+    "ogTitle": "Notes App - Social Note Taking",
+    "ogDescription": "Take and share notes with your Farcaster friends.",
+    "ogImageUrl": "https://notesapp-red-eta.vercel.app/og.png",
     "noindex": true
   }
 });
