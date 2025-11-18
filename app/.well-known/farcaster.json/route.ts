@@ -18,13 +18,7 @@ return Response.json({
   "miniapp": {
     "version": "1",
     "name": "Notes App",
-    "homeUrl": "https://notesapp-red-eta.vercel.app/",
-    "iconUrl": "https://notesapp-red-eta.vercel.app/icon.png",
-    "splashImageUrl": "https://notesapp-red-eta.vercel.app/splash.png",
-    "splashBackgroundColor": "#000000",
-    "webhookUrl": "https://notesapp-red-eta.vercel.app/api/webhook",
-    "subtitle": "Simple, social note-taking",
-    "description": "A fast and simple way to take notes and share with friends on Farcaster."
+    "homeUrl": "https://notesapp-red-eta.vercel.app/"
   }
 });
 }
