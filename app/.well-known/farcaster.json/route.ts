@@ -15,7 +15,7 @@ return Response.json({
   "frame": {
     "version": "1",
     "name": "Notes App", 
-    
+    "iconUrl": "https://ex.co/i.png",
     "homeUrl": "https://notesapp-red-eta.vercel.app/", 
 
     "splashBackgroundColor": "#ffffff",
