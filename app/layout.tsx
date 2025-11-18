@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
                     type: 'launch_miniapp',
                     name: 'Notes App',
                     url: 'https://notesapp-red-eta.vercel.app',
-                    splashImageUrl: 'https://notesapp-red-eta.vercel.app/globe.svg',
+                    splashImageUrl: 'https://notesapp-red-eta.vercel.app/image.jpeg',
                     splashBackgroundColor: '#000000',
                 },
             },
