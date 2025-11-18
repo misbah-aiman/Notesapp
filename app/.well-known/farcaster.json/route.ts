@@ -24,20 +24,7 @@ return Response.json({
     "splashBackgroundColor": "#000000",
     "webhookUrl": "https://notesapp-red-eta.vercel.app/api/webhook",
     "subtitle": "Simple, social note-taking",
-    "description": "A fast and simple way to take notes and share with friends on Farcaster.",
-    "screenshotUrls": [
-      "https://notesapp-red-eta.vercel.app/screenshots/1.png",
-      "https://notesapp-red-eta.vercel.app/screenshots/2.png",
-      "https://notesapp-red-eta.vercel.app/screenshots/3.png"
-    ],
-    "primaryCategory": "social",
-    "tags": ["notes", "productivity", "miniapp"],
-    "heroImageUrl": "https://notesapp-red-eta.vercel.app/og.png",
-    "tagline": "Take notes instantly",
-    "ogTitle": "Notes App - Social Note Taking",
-    "ogDescription": "Take and share notes with your Farcaster friends.",
-    "ogImageUrl": "https://notesapp-red-eta.vercel.app/og.png",
-    "noindex": true
+    "description": "A fast and simple way to take notes and share with friends on Farcaster."
   }
 });
 }
