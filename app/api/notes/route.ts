@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_URL ?? '*',
+  'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS })
+}
+
 export async function GET(request: Request) {
   try {
     const client = await clientPromise;
@@ -22,12 +32,12 @@ export async function GET(request: Request) {
       id: note._id.toString(),
     }));
 
-    return NextResponse.json({ success: true, data: notesWithStringId });
+  return NextResponse.json({ success: true, data: notesWithStringId }, { headers: CORS_HEADERS });
   } catch (error: any) {
     console.error('GET Notes Error:', error);
     return NextResponse.json(
       { success: false, error: error.message || 'Internal Server Error' },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
@@ -44,7 +54,7 @@ export async function POST(request: Request) {
     if (!title?.trim() || !content?.trim()) {
       return NextResponse.json(
         { success: false, error: 'Title and content are required' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -67,13 +77,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { success: true, data: createdNote },
-      { status: 201 }
+      { status: 201, headers: CORS_HEADERS }
     );
   } catch (error: any) {
     console.error('POST Note Error:', error);
     return NextResponse.json(
       { success: false, error: error.message || 'Internal Server Error' },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
