@@ -14,7 +14,7 @@ return Response.json({
   },
   "frame": {
     "version": "1",
-    "name": "Example Frame",
+    "name": "Notes App",
     "iconUrl": "https://notesapp-red-eta.vercel.app/icon.png",
     "homeUrl": "https://notesapp-red-eta.vercel.app",
     "imageUrl": "https://notesapp-red-eta.vercel.app/image.png",
