@@ -19,6 +19,7 @@ return Response.json({
     "homeUrl": "https://notesapp-red-eta.vercel.app",
     "imageUrl": "https://notesapp-red-eta.vercel.app/image.png",
     "buttonTitle": "Check this out",
+    "description": "A perfect app to save your notes or important points.",
     "splashImageUrl": "https://notesapp-red-eta.vercel.app/splash.png",
     "splashBackgroundColor": "#eeccff",
     "webhookUrl": "https://notesapp-red-eta.vercel.app/api/webhook"
