@@ -181,7 +181,8 @@ export default function MyNotesPage() {
                       border: '1px solid #ccc',
                       borderRadius: '4px',
                       resize: 'vertical',
-                      fontFamily: 'inherit'
+                      fontFamily: 'inherit',
+                      color: 'black'
                     }}
                   />
                   <div style={{ display: 'flex', gap: '10px' }}>
