@@ -13,8 +13,10 @@ return Response.json({
     "signature": "g93QgfAVz7GMsRtldjPepRGgF8h16q7DH6m8wHSzIastavhtivziqE9O0F6kUTkyukO02xu71OgJ7TxV+aBneRs="
   },
   "frame": {
-    "version": "1",
     "name": "Notes App",
+    "version": "1",
+    "primaryCategory": "productivity",
+    "tags": ["notes", "productivity", "writing", "organization"],
     "iconUrl": "https://notesapp-red-eta.vercel.app/icon.png",
     "homeUrl": "https://notesapp-red-eta.vercel.app",
     "imageUrl": "https://notesapp-red-eta.vercel.app/globe.svg",
