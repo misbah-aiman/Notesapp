@@ -7,19 +7,21 @@ return Object.fromEntries(
 export async function GET() {
 const URL = process.env.NEXT_PUBLIC_URL as string;
 return Response.json({
-  "accountAssociation": { 
-    "header": "",
-    "payload": "",
-    "signature": ""
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE0NzMxNzIsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg5NGQ3Njk0NzQ5N2QzZTcxZUU1NDM4OTBGRjBjOEM0MkM3RmI3NDIzIn0",
+    "payload": "eyJkb21haW4iOiJub3Rlc2FwcC1yZWQtZXRhLnZlcmNlbC5hcHAifQ",
+    "signature": "g93QgfAVz7GMsRtldjPepRGgF8h16q7DH6m8wHSzIastavhtivziqE9O0F6kUTkyukO02xu71OgJ7TxV+aBneRs="
   },
   "frame": {
     "version": "1",
-    "name": "Notes App", 
-    "iconUrl": "https://ex.co/i.png",
-    "homeUrl": "https://notesapp-red-eta.vercel.app/", 
-
-    "splashBackgroundColor": "#ffffff",
-    "webhookUrl": "https://yourdomain.com/api/webhook"
+    "name": "Example Frame",
+    "iconUrl": "https://notesapp-red-eta.vercel.app/icon.png",
+    "homeUrl": "https://notesapp-red-eta.vercel.app",
+    "imageUrl": "https://notesapp-red-eta.vercel.app/image.png",
+    "buttonTitle": "Check this out",
+    "splashImageUrl": "https://notesapp-red-eta.vercel.app/splash.png",
+    "splashBackgroundColor": "#eeccff",
+    "webhookUrl": "https://notesapp-red-eta.vercel.app/api/webhook"
   }
-    });
+});
 }
