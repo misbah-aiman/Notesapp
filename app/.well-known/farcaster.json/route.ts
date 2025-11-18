@@ -7,18 +7,37 @@ return Object.fromEntries(
 export async function GET() {
 const URL = process.env.NEXT_PUBLIC_URL as string;
 return Response.json({
-  "accountAssociation": {
+  "accountAssociation": {  // these will be added in step 5
     "header": "",
     "payload": "",
     "signature": ""
   },
   "baseBuilder": {
-    "ownerAddress": "0x9491af0e35D1b5816a5e7f5e3C75Cd45af1eBBE9"
+    "ownerAddress": "0x9491af0e35D1b5816a5e7f5e3C75Cd45af1eBBE9" // add your Base Account address here
   },
   "miniapp": {
     "version": "1",
-    "name": "Notes App",
-    "homeUrl": "https://notesapp-red-eta.vercel.app/"
+    "name": "Example Mini App",
+    "homeUrl": "https://ex.co",
+    "iconUrl": "https://ex.co/i.png",
+    "splashImageUrl": "https://ex.co/l.png",
+    "splashBackgroundColor": "#000000",
+    "webhookUrl": "https://ex.co/api/webhook",
+    "subtitle": "Fast, fun, social",
+    "description": "A fast, fun way to challenge friends in real time.",
+    "screenshotUrls": [
+      "https://ex.co/s1.png",
+      "https://ex.co/s2.png",
+      "https://ex.co/s3.png"
+    ],
+    "primaryCategory": "social",
+    "tags": ["example", "miniapp", "baseapp"],
+    "heroImageUrl": "https://ex.co/og.png",
+    "tagline": "Play instantly",
+    "ogTitle": "Example Mini App",
+    "ogDescription": "Challenge friends in real time.",
+    "ogImageUrl": "https://ex.co/og.png",
+    "noindex": true
   }
 });
 }
