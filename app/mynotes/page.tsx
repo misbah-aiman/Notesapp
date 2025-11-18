@@ -13,6 +13,12 @@ interface Note {
 }
 
 export default function MyNotesPage() {
+  // Use an absolute API base when NEXT_PUBLIC_URL is set so requests work
+  // from inside embedded contexts (miniapp iframe) where relative paths
+  // would resolve to the host page instead of this app.
+  const API_BASE = (process.env.NEXT_PUBLIC_URL && process.env.NEXT_PUBLIC_URL.length > 0)
+    ? `${process.env.NEXT_PUBLIC_URL.replace(/\/$/, '')}/api/notes`
+    : '/api/notes'
   const [notes, setNotes] = useState<Note[]>([])
   const [loading, setLoading] = useState(true)
   const [editingNote, setEditingNote] = useState<Note | null>(null)
@@ -26,7 +32,7 @@ export default function MyNotesPage() {
   const fetchNotes = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/notes')
+  const res = await fetch(API_BASE)
       const result = await res.json()
       
       if (!res.ok) {
@@ -48,7 +54,7 @@ export default function MyNotesPage() {
   console.log('🔍 FRONTEND DELETE - Deleting note ID:', id);
   
   try {
-    const res = await fetch(`/api/notes/${id}`, { 
+    const res = await fetch(`${API_BASE}/${id}`, { 
       method: 'DELETE'
     })
     
@@ -88,7 +94,7 @@ export default function MyNotesPage() {
     console.log('Request Body:', requestBody)
     console.log('Stringified Body:', JSON.stringify(requestBody))
     
-    const res = await fetch(`/api/notes/${editingNote._id}`, {
+    const res = await fetch(`${API_BASE}/${editingNote._id}`, {
       method: 'PUT', 
       headers: { 
         'Content-Type': 'application/json',
@@ -160,7 +166,8 @@ export default function MyNotesPage() {
                       padding: '10px',
                       fontSize: '16px',
                       border: '1px solid #ccc',
-                      borderRadius: '4px'
+                      borderRadius: '4px',
+                      color: 'black'
                     }}
                   />
                   <textarea 
