@@ -7,22 +7,24 @@ export default function ConnectWalletPage() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.titleContainer}>
+
+      {/* Header */}
+      <div style={styles.header}>
+        <button onClick={() => router.back()} style={styles.backButton}>
+          ← Back
+        </button>
         <h1 style={styles.title}>Connect Wallet</h1>
       </div>
 
-      <div style={styles.sidebar}>
-        <button
-          onClick={() => router.back()}
-          style={styles.button}
-        >
-          ← Back
-        </button>
-
-        <p style={styles.description}>Use the button below to connect your wallet via the Mini App SDK.</p>
+      <div style={styles.content}>
+        <p style={styles.description}>
+          Use the button below to connect your wallet via the Mini App SDK.
+        </p>
 
         <div style={styles.walletSection}>
-          <ConnectWalletButton />
+          <div style={styles.walletButtonWrapper}>
+            <ConnectWalletButton />
+          </div>
         </div>
       </div>
     </div>
@@ -35,53 +37,59 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     height: '100vh',
     backgroundColor: 'white',
+    padding: '20px',
   },
-  titleContainer: {
-    backgroundColor: '#e8f5e8',
-    borderRadius: '12px',
-    padding: '15px 30px',
-    margin: '20px',
-    alignSelf: 'flex-start',
+
+  /** HEADER BAR */
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+    marginBottom: '30px',
   },
+
+  backButton: {
+    backgroundColor: 'rgba(128,128,128,0.25)', // transparent grey
+    color: '#333',
+    border: 'none',
+    padding: '8px 16px',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+  },
+
   title: {
     margin: 0,
     color: '#2d5016',
     fontSize: '24px',
     fontWeight: 'bold',
   },
-  sidebar: {
-    width: '200px',
+
+  /** MAIN CONTENT */
+  content: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: '40px',
-    paddingLeft: '20px',
   },
-  button: {
-    backgroundColor: 'rgba(232, 245, 232, 0.8)',
-    color: '#2d5016',
-    border: 'none',
-    padding: '12px 24px',
-    margin: '10px 0',
-    cursor: 'pointer',
-    fontSize: '16px',
-    borderRadius: '12px',
-    fontWeight: 'bold',
-    width: '160px',
-    textAlign: 'center',
-  },
+
   description: {
     color: '#2d5016',
     fontSize: '14px',
     textAlign: 'center',
-    marginTop: '20px',
     marginBottom: '20px',
-    maxWidth: '200px',
+    maxWidth: '260px',
   },
+
   walletSection: {
-    marginTop: '20px',
     padding: '16px',
     backgroundColor: '#e8f5e8',
     borderRadius: '12px',
+  },
+
+  /** Make wallet button smaller */
+  walletButtonWrapper: {
+    transform: 'scale(0.85)', // reduces size slightly
+    transformOrigin: 'center',
   },
 }
