@@ -132,3 +132,6 @@ export function ConnectWalletButton() {
     </div>
   );
 }
+
+// Provide a default export as some imports/build environments expect it
+export default ConnectWalletButton
