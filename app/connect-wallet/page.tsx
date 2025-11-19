@@ -8,7 +8,6 @@ export default function ConnectWalletPage() {
   return (
     <div style={styles.container}>
 
-      {/* Header */}
       <div style={styles.header}>
         <button onClick={() => router.back()} style={styles.backButton}>
           ← Back
@@ -16,17 +15,16 @@ export default function ConnectWalletPage() {
         <h1 style={styles.title}>Connect Wallet</h1>
       </div>
 
-      <div style={styles.content}>
+      <div style={styles.sidebar}>
         <p style={styles.description}>
           Use the button below to connect your wallet via the Mini App SDK.
         </p>
 
         <div style={styles.walletSection}>
-          <div style={styles.walletButtonWrapper}>
-            <ConnectWalletButton />
-          </div>
+          <ConnectWalletButton />
         </div>
       </div>
+
     </div>
   )
 }
@@ -37,59 +35,52 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     height: '100vh',
     backgroundColor: 'white',
-    padding: '20px',
   },
 
-  /** HEADER BAR */
   header: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px',
-    marginBottom: '30px',
+    gap: '12px',
+    background: 'rgba(200, 200, 200, 0.3)', 
+    padding: '15px 20px',
   },
 
   backButton: {
-    backgroundColor: 'rgba(128,128,128,0.25)', // transparent grey
+    background: 'rgba(150,150,150,0.2)',
     color: '#333',
     border: 'none',
-    padding: '8px 16px',
+    padding: '8px 14px',
     cursor: 'pointer',
-    borderRadius: '8px',
     fontSize: '14px',
+    borderRadius: '8px',
     fontWeight: 'bold',
   },
 
   title: {
     margin: 0,
     color: '#2d5016',
-    fontSize: '24px',
+    fontSize: '22px',
     fontWeight: 'bold',
   },
 
-  /** MAIN CONTENT */
-  content: {
+  sidebar: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    paddingTop: '40px',
   },
 
   description: {
     color: '#2d5016',
     fontSize: '14px',
     textAlign: 'center',
+    maxWidth: '220px',
     marginBottom: '20px',
-    maxWidth: '260px',
   },
 
   walletSection: {
-    padding: '16px',
-    backgroundColor: '#e8f5e8',
-    borderRadius: '12px',
-  },
-
-  /** Make wallet button smaller */
-  walletButtonWrapper: {
-    transform: 'scale(0.85)', // reduces size slightly
-    transformOrigin: 'center',
+    marginTop: '10px',
+    padding: '10px',
+    borderRadius: '10px',
   },
 }
