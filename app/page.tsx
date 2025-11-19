@@ -30,7 +30,12 @@ export default function HomePage() {
         <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
         <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
         <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
-  <ConnectWalletButton />
+  <button
+          style={styles.button}
+          onClick={() => router.push('/connect-wallet')}
+        >
+          Connect Wallet
+        </button>
       </div>
     </div>
   )
