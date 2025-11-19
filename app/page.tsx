@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { sdk } from '@farcaster/miniapp-sdk'
+import { ConnectWalletButton } from '@/app/components/ConnectWalletButton'
 
 export default function HomePage() {
   const router = useRouter()
@@ -29,6 +30,7 @@ export default function HomePage() {
         <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
         <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
         <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
+  <ConnectWalletButton />
       </div>
     </div>
   )
