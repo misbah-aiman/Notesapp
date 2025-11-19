@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import sdk from '@farcaster/frame-sdk';
+import { sdk } from '@farcaster/miniapp-sdk';
 
 export function ConnectWalletButton() {
   const [isConnected, setIsConnected] = useState(false);
@@ -9,13 +9,12 @@ export function ConnectWalletButton() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
 
-  // Connect wallet function
   const connectWallet = async () => {
     try {
       setIsLoading(true);
       setError('');
 
-      // Request wallet connection from MiniKit
+      // Request wallet connection via the miniapp SDK
       const result = await sdk.wallet.ethProvider.request({
         method: 'eth_requestAccounts',
       });
@@ -24,24 +23,31 @@ export function ConnectWalletButton() {
         const address = result[0];
         setWalletAddress(address);
         setIsConnected(true);
-        console.log('Connected wallet:', address);
+        console.log('✅ Connected wallet:', address);
+      } else {
+        setError('No wallet account returned. Please try again.');
       }
-    } catch (err) {
-      console.error('Error connecting wallet:', err);
-      setError('Failed to connect wallet. Please try again.');
+    } catch (err: any) {
+      console.error('❌ Error connecting wallet:', err);
+      // Provide more specific error messages
+      if (err?.code === 'ECONNREFUSED' || err?.message?.includes('refused')) {
+        setError('Wallet connection refused. Please check your wallet.');
+      } else if (err?.message?.includes('not found')) {
+        setError('Wallet provider not found. Make sure your wallet is installed.');
+      } else {
+        setError(`Failed to connect wallet: ${err?.message || 'Unknown error'}`);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Disconnect wallet function
   const disconnectWallet = () => {
     setWalletAddress('');
     setIsConnected(false);
     setError('');
   };
 
-  // Check if wallet is already connected on mount
   useEffect(() => {
     const checkConnection = async () => {
       try {
@@ -52,16 +58,17 @@ export function ConnectWalletButton() {
         if (accounts && accounts.length > 0) {
           setWalletAddress(accounts[0]);
           setIsConnected(true);
+          console.log('✅ Wallet already connected:', accounts[0]);
         }
       } catch (err) {
         console.error('Error checking connection:', err);
+        // Silently fail for checks, only show errors on user action
       }
     };
 
     checkConnection();
   }, []);
 
-  // Helper function to shorten wallet address for display
   const shortenAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
@@ -74,14 +81,14 @@ export function ConnectWalletButton() {
           disabled={isLoading}
           style={{
             padding: '12px 24px',
-            backgroundColor: '#2563eb',
+            backgroundColor: '#2d5016',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: '12px',
             fontWeight: 'bold',
             fontSize: '16px',
             cursor: isLoading ? 'not-allowed' : 'pointer',
-            opacity: isLoading ? 0.5 : 1,
+            opacity: isLoading ? 0.7 : 1,
           }}
         >
           {isLoading ? 'Connecting...' : 'Connect Wallet'}
@@ -124,6 +131,8 @@ export function ConnectWalletButton() {
             color: '#991b1b',
             borderRadius: '8px',
             fontSize: '14px',
+            maxWidth: '200px',
+            textAlign: 'center',
           }}
         >
           {error}

@@ -12,12 +12,13 @@ export default function ConnectWalletPage() {
         <button onClick={() => router.back()} style={styles.backButton}>
           ← Back
         </button>
+
         <h1 style={styles.title}>Connect Wallet</h1>
       </div>
 
-      <div style={styles.sidebar}>
+      <div style={styles.content}>
         <p style={styles.description}>
-          Use the button below to connect your wallet via the Mini App SDK.
+          Use the button below to connect your wallet.
         </p>
 
         <div style={styles.walletSection}>
@@ -41,7 +42,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
-    background: 'rgba(200, 200, 200, 0.3)', 
     padding: '15px 20px',
   },
 
@@ -61,26 +61,27 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: '#2d5016',
     fontSize: '22px',
     fontWeight: 'bold',
+    backgroundColor: 'rgba(45, 80, 22, 0.1)',
+    padding: '6px 14px',
+    borderRadius: '8px',
   },
 
-  sidebar: {
+  content: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: '40px',
+    alignItems: 'flex-start',  
+    paddingLeft: '20px',
+    paddingTop: '30px',
   },
 
   description: {
     color: '#2d5016',
     fontSize: '14px',
-    textAlign: 'center',
-    maxWidth: '220px',
-    marginBottom: '20px',
+    marginBottom: '15px',
   },
 
   walletSection: {
     marginTop: '10px',
-    padding: '10px',
-    borderRadius: '10px',
+    padding: '10px 0',
   },
 }
