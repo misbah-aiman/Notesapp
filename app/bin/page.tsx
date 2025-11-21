@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Note {
   _id: string
@@ -12,6 +13,7 @@ interface Note {
 }
 
 export default function BinPage() {
+  const router = useRouter()
   const [bin, setBin] = useState<Note[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -100,7 +102,14 @@ export default function BinPage() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white', position: 'relative' }}>
+      <button
+        onClick={() => router.push('/')}
+        style={styles.backButton}
+      >
+        ← Back
+      </button>
+
       <h1 style={{ color: 'black', marginBottom: '30px' }}>Bin</h1>
 
       {bin.length === 0 ? (
@@ -171,4 +180,20 @@ export default function BinPage() {
       )}
     </div>
   )
+}
+
+const styles: { [key: string]: React.CSSProperties } = {
+  backButton: {
+    position: 'absolute',
+    top: '20px',
+    left: '20px',
+    background: 'rgba(150,150,150,0.2)',
+    color: '#333',
+    border: 'none',
+    padding: '8px 14px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    borderRadius: '8px',
+    fontWeight: 'bold',
+  },
 }

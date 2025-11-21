@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Note {
   _id: string
@@ -16,6 +17,7 @@ export default function MyNotesPage() {
   // Use an absolute API base when NEXT_PUBLIC_URL is set so requests work
   // from inside embedded contexts (miniapp iframe) where relative paths
   // would resolve to the host page instead of this app.
+  const router = useRouter()
   const API_BASE = (process.env.NEXT_PUBLIC_URL && process.env.NEXT_PUBLIC_URL.length > 0)
     ? `${process.env.NEXT_PUBLIC_URL.replace(/\/$/, '')}/api/notes`
     : '/api/notes'
@@ -134,7 +136,14 @@ export default function MyNotesPage() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white', position: 'relative' }}>
+      <button
+        onClick={() => router.push('/')}
+        style={styles.backButton}
+      >
+        ← Back
+      </button>
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: 'black', margin: 0 }}>My Notes</h1>
         <span style={{ color: '#666' }}>{notes.length} notes</span>
@@ -273,4 +282,20 @@ export default function MyNotesPage() {
       )}
     </div>
   )
+}
+
+const styles: { [key: string]: React.CSSProperties } = {
+  backButton: {
+    position: 'absolute',
+    top: '20px',
+    left: '20px',
+    background: 'rgba(150,150,150,0.2)',
+    color: '#333',
+    border: 'none',
+    padding: '8px 14px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    borderRadius: '8px',
+    fontWeight: 'bold',
+  },
 }

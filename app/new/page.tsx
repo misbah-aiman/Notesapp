@@ -48,7 +48,14 @@ export default function NewNotePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white' }}>
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white', position: 'relative' }}>
+      <button
+        onClick={() => router.push('/')}
+        style={styles.backButton}
+      >
+        ← Back
+      </button>
+
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
         <div style={{
           width: '40px', height: '40px', backgroundColor: '#e8f5e8',
@@ -100,4 +107,20 @@ export default function NewNotePage() {
       </form>
     </div>
   )
+}
+
+const styles: { [key: string]: React.CSSProperties } = {
+  backButton: {
+    position: 'absolute',
+    top: '20px',
+    left: '20px',
+    background: 'rgba(150,150,150,0.2)',
+    color: '#333',
+    border: 'none',
+    padding: '8px 14px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    borderRadius: '8px',
+    fontWeight: 'bold',
+  },
 }
