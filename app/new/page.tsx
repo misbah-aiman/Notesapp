@@ -48,7 +48,7 @@ export default function NewNotePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white', position: 'relative' }}>
+  <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: '#faf7f2', position: 'relative', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial' }}>
       <button
         onClick={() => router.push('/')}
         style={styles.backButton}
@@ -56,16 +56,16 @@ export default function NewNotePage() {
         ← Back
       </button>
 
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '15px', marginBottom: '30px', marginLeft: '60px' }}>
         <div style={{
-          width: '40px', height: '40px', backgroundColor: '#e8f5e8',
-          borderRadius: '10px', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', fontSize: '20px', fontWeight: 'bold', color: 'black'
+          width: '48px', height: '48px', backgroundColor: '#ffffff',
+          borderRadius: '12px', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', fontSize: '22px', fontWeight: '700', color: '#4b3f35', boxShadow: '0 8px 20px rgba(0,0,0,0.06)'
         }}>+</div>
-        <h1 style={{ margin: 0, color: 'black' }}>New Note</h1>
+        <h1 style={{ margin: 0, color: '#4b3f35', fontSize: '24px' }}>New Note</h1>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '600px' }}>
+  <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '700px', backgroundColor: '#ffffff', padding: '24px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.04)' }}>
         <input
           placeholder="Title"
           value={title}
@@ -96,9 +96,9 @@ export default function NewNotePage() {
           type="submit"
           disabled={loading}
           style={{
-            padding: '15px 30px', fontSize: '16px',
-            backgroundColor: loading ? '#6c757d' : '#4CAF50',
-            color: 'white', border: 'none', borderRadius: '8px',
+            padding: '12px 28px', fontSize: '16px',
+            backgroundColor: loading ? '#6c757d' : '#2d5016',
+            color: 'white', border: 'none', borderRadius: '12px',
             cursor: loading ? 'not-allowed' : 'pointer'
           }}
         >

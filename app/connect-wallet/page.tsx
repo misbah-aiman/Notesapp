@@ -6,7 +6,7 @@ export default function ConnectWalletPage() {
   const router = useRouter()
 
   return (
-    <div style={styles.container}>
+  <div style={{ ...styles.container, fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto' }}>
 
       <div style={styles.header}>
         <button onClick={() => router.back()} style={styles.backButton}>
@@ -16,12 +16,12 @@ export default function ConnectWalletPage() {
         <h1 style={styles.title}>Connect Wallet</h1>
       </div>
 
-      <div style={styles.content}>
+      <div style={{ paddingLeft: '60px', paddingTop: '20px' }}>
         <p style={styles.description}>
           Use the button below to connect your wallet.
         </p>
 
-        <div style={styles.walletSection}>
+        <div style={{ ...styles.walletSection, backgroundColor: '#ffffff', padding: '16px', borderRadius: '12px', boxShadow: '0 8px 20px rgba(0,0,0,0.04)' }}>
           <ConnectWalletButton />
         </div>
       </div>

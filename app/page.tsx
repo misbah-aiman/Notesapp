@@ -22,64 +22,136 @@ export default function HomePage() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.titleContainer}>
-        <h1 style={styles.title}>Notes App</h1>
+      {/* Top */}
+      <div style={styles.header}>
+        <h1 style={styles.title}>Notes</h1>
+        <p style={styles.subtitle}>Private thoughts, just for you</p>
       </div>
-  
-      <div style={styles.sidebar}>
-        <button style={styles.button} onClick={() => router.push('/new')}>+ NEW</button>
-        <button style={styles.button} onClick={() => router.push('/mynotes')}>MY NOTES</button>
-        <button style={styles.button} onClick={() => router.push('/bin')}>BIN</button>
-  <button
-          style={styles.button}
-          onClick={() => router.push('/connect-wallet')}
-        >
-          Connect Wallet
+
+      {/* Center Card */}
+      <div style={styles.card}>
+        <h2 style={styles.cardTitle}>Start writing</h2>
+        <p style={styles.cardText}>Your thoughts stay yours.</p>
+
+        <div style={{ marginTop: '20px', width: '100%' }}>
+          <ConnectWalletButton />
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div style={styles.bottomNav}>
+        <button style={styles.navItem} onClick={() => router.push('/bin')}>
+          🗑️
+          <span>Bin</span>
+        </button>
+
+        <button style={styles.navItem} onClick={() => router.push('/mynotes')}>
+          📝
+          <span>Notes</span>
+        </button>
+
+        <button style={styles.navItemCenter} onClick={() => router.push('/new')}>
+          ＋
+        </button>
+
+        <button style={styles.navItem} onClick={() => router.push('/todo')}>
+          ✅
+          <span>To-Do</span>
+        </button>
+
+        <button style={styles.navItem} onClick={() => router.push('/profile')}>
+          👤
+          <span>Profile</span>
         </button>
       </div>
     </div>
   )
 }
-
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    display: 'flex',
-    flexDirection: 'column',
     height: '100vh',
-    backgroundColor: 'white',
-  },
-  titleContainer: {
-    backgroundColor: '#e8f5e8',
-    borderRadius: '12px',
-    padding: '15px 30px',
-    margin: '20px',
-    alignSelf: 'flex-start',
-  },
-  title: {
-    margin: 0,
-    color: '#2d5016',
-    fontSize: '24px',
-    fontWeight: 'bold',
-  },
-  sidebar: {
-    width: '200px',
+    backgroundColor: '#faf7f2', // soft plain color
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: '40px',
-    paddingLeft: '20px',
+    paddingBottom: '80px', // space for bottom nav
   },
-  button: {
-    backgroundColor: 'rgba(232, 245, 232, 0.8)',
-    color: '#2d5016',
-    border: 'none',
-    padding: '12px 24px',
-    margin: '10px 0',
-    cursor: 'pointer',
-    fontSize: '16px',
-    borderRadius: '12px',
-    fontWeight: 'bold',
-    width: '160px',
+
+  header: {
+    marginTop: '40px',
     textAlign: 'center',
+  },
+
+  title: {
+    fontSize: '28px',
+    margin: 0,
+    color: '#4b3f35',
+  },
+
+  subtitle: {
+    fontSize: '14px',
+    color: '#8a7f75',
+    marginTop: '6px',
+  },
+
+  card: {
+    marginTop: '60px',
+    backgroundColor: '#ffffff',
+    borderRadius: '24px',
+    padding: '30px',
+    width: '90%',
+    maxWidth: '360px',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+    textAlign: 'center',
+  },
+
+  cardTitle: {
+    fontSize: '22px',
+    marginBottom: '8px',
+    color: '#4b3f35',
+  },
+
+  cardText: {
+    fontSize: '14px',
+    color: '#8a7f75',
+  },
+
+  bottomNav: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: '70px',
+    backgroundColor: '#ffffff',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    boxShadow: '0 -5px 20px rgba(0,0,0,0.08)',
+    borderTopLeftRadius: '20px',
+    borderTopRightRadius: '20px',
+  },
+
+  navItem: {
+    background: 'none',
+    border: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    fontSize: '12px',
+    color: '#6b5f55',
+    cursor: 'pointer',
+  },
+
+  navItemCenter: {
+    backgroundColor: '#c0895e',
+    border: 'none',
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%',
+    color: '#fff',
+    fontSize: '28px',
+    cursor: 'pointer',
+    marginTop: '-30px',
+    boxShadow: '0 8px 20px rgba(192,137,94,0.4)',
   },
 }

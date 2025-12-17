@@ -136,7 +136,7 @@ export default function MyNotesPage() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: '#faf7f2', position: 'relative', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto' }}>
       <button
         onClick={() => router.push('/')}
         style={styles.backButton}
@@ -144,9 +144,9 @@ export default function MyNotesPage() {
         ← Back
       </button>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h1 style={{ color: 'black', margin: 0 }}>My Notes</h1>
-        <span style={{ color: '#666' }}>{notes.length} notes</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', paddingLeft: '60px' }}>
+        <h1 style={{ color: '#4b3f35', margin: 0, fontSize: '24px' }}>My Notes</h1>
+        <span style={{ color: '#8a7f75' }}>{notes.length} notes</span>
       </div>
 
       {notes.length === 0 ? (
@@ -154,15 +154,15 @@ export default function MyNotesPage() {
           <p>No notes yet. Create your first note!</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gap: '20px', maxWidth: '800px' }}>
+        <div style={{ display: 'grid', gap: '20px', maxWidth: '900px' }}>
           {notes.map(note => (
             <div 
               key={note._id}
               style={{
-                border: '1px solid #e0e0e0',
-                borderRadius: '8px',
+                borderRadius: '12px',
                 padding: '20px',
-                backgroundColor: '#fafafa'
+                backgroundColor: '#ffffff',
+                boxShadow: '0 8px 20px rgba(0,0,0,0.04)'
               }}
             >
               {editingNote?._id === note._id ? (

@@ -102,7 +102,7 @@ export default function BinPage() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: 'white', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', padding: '50px', backgroundColor: '#faf7f2', position: 'relative', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto' }}>
       <button
         onClick={() => router.push('/')}
         style={styles.backButton}
@@ -110,7 +110,7 @@ export default function BinPage() {
         ← Back
       </button>
 
-      <h1 style={{ color: 'black', marginBottom: '30px' }}>Bin</h1>
+      <h1 style={{ color: '#4b3f35', marginBottom: '30px', marginLeft: '60px', fontSize: '24px' }}>Bin</h1>
 
       {bin.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>
